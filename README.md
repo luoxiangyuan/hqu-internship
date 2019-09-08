@@ -1,0 +1,2 @@
+# hqu-internship
+internshipMag
