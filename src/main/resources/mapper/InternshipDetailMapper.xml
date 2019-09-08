@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqu.internship.dao.InternshipDetailMapper">
+  <resultMap id="BaseResultMap" type="com.hqu.internship.bean.InternshipDetail">
+    <id column="internship_id" jdbcType="INTEGER" property="internshipId" />
+    <result column="topic" jdbcType="VARCHAR" property="topic" />
+    <result column="enterprise_id" jdbcType="INTEGER" property="enterpriseId" />
+    <result column="description" jdbcType="VARCHAR" property="description" />
+    <result column="status" jdbcType="TINYINT" property="status" />
+    <result column="need_num" jdbcType="INTEGER" property="needNum" />
+    <result column="exp_end_time" jdbcType="TIMESTAMP" property="expEndTime" />
+    <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
+    <result column="apply_end_time" jdbcType="TIMESTAMP" property="applyEndTime" />
+    <result column="exp_modify_time" jdbcType="TIMESTAMP" property="expModifyTime" />
+    <result column="exp_begin_time" jdbcType="TIMESTAMP" property="expBeginTime" />
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    internship_id, topic, enterprise_id, description, status, need_num, exp_end_time, 
+    submit_time, apply_end_time, exp_modify_time, exp_begin_time
+  </sql>
+  <select id="selectByExample" parameterType="com.hqu.internship.bean.InternshipDetailExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from internship_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from internship_detail
+    where internship_id = #{internshipId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByEtpId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from internship_detail
+    where enterprise_id = #{enterpriseId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByEtpIdSta" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from internship_detail
+    where enterprise_id = #{enterpriseId,jdbcType=INTEGER} and status = #{status,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from internship_detail
+    where internship_id = #{internshipId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hqu.internship.bean.InternshipDetailExample">
+    delete from internship_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hqu.internship.bean.InternshipDetail">
+    insert into internship_detail (internship_id, topic, enterprise_id, 
+      description, status, need_num, 
+      exp_end_time, submit_time, apply_end_time, 
+      exp_modify_time, exp_begin_time)
+    values (#{internshipId,jdbcType=INTEGER}, #{topic,jdbcType=VARCHAR}, #{enterpriseId,jdbcType=INTEGER}, 
+      #{description,jdbcType=VARCHAR}, #{status,jdbcType=TINYINT}, #{needNum,jdbcType=INTEGER}, 
+      #{expEndTime,jdbcType=TIMESTAMP}, #{submitTime,jdbcType=TIMESTAMP}, #{applyEndTime,jdbcType=TIMESTAMP}, 
+      #{expModifyTime,jdbcType=TIMESTAMP}, #{expBeginTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hqu.internship.bean.InternshipDetail">
+    insert into internship_detail
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="internshipId != null">
+        internship_id,
+      </if>
+      <if test="topic != null">
+        topic,
+      </if>
+      <if test="enterpriseId != null">
+        enterprise_id,
+      </if>
+      <if test="description != null">
+        description,
+      </if>
+      <if test="status != null">
+        status,
+      </if>
+      <if test="needNum != null">
+        need_num,
+      </if>
+      <if test="expEndTime != null">
+        exp_end_time,
+      </if>
+      <if test="submitTime != null">
+        submit_time,
+      </if>
+      <if test="applyEndTime != null">
+        apply_end_time,
+      </if>
+      <if test="expModifyTime != null">
+        exp_modify_time,
+      </if>
+      <if test="expBeginTime != null">
+        exp_begin_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="internshipId != null">
+        #{internshipId,jdbcType=INTEGER},
+      </if>
+      <if test="topic != null">
+        #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null">
+        #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        #{status,jdbcType=TINYINT},
+      </if>
+      <if test="needNum != null">
+        #{needNum,jdbcType=INTEGER},
+      </if>
+      <if test="expEndTime != null">
+        #{expEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null">
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyEndTime != null">
+        #{applyEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expModifyTime != null">
+        #{expModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expBeginTime != null">
+        #{expBeginTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hqu.internship.bean.InternshipDetailExample" resultType="java.lang.Long">
+    select count(*) from internship_detail
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update internship_detail
+    <set>
+      <if test="record.internshipId != null">
+        internship_id = #{record.internshipId,jdbcType=INTEGER},
+      </if>
+      <if test="record.topic != null">
+        topic = #{record.topic,jdbcType=VARCHAR},
+      </if>
+      <if test="record.enterpriseId != null">
+        enterprise_id = #{record.enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="record.description != null">
+        description = #{record.description,jdbcType=VARCHAR},
+      </if>
+      <if test="record.status != null">
+        status = #{record.status,jdbcType=TINYINT},
+      </if>
+      <if test="record.needNum != null">
+        need_num = #{record.needNum,jdbcType=INTEGER},
+      </if>
+      <if test="record.expEndTime != null">
+        exp_end_time = #{record.expEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.submitTime != null">
+        submit_time = #{record.submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.applyEndTime != null">
+        apply_end_time = #{record.applyEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expModifyTime != null">
+        exp_modify_time = #{record.expModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="record.expBeginTime != null">
+        exp_begin_time = #{record.expBeginTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update internship_detail
+    set internship_id = #{record.internshipId,jdbcType=INTEGER},
+      topic = #{record.topic,jdbcType=VARCHAR},
+      enterprise_id = #{record.enterpriseId,jdbcType=INTEGER},
+      description = #{record.description,jdbcType=VARCHAR},
+      status = #{record.status,jdbcType=TINYINT},
+      need_num = #{record.needNum,jdbcType=INTEGER},
+      exp_end_time = #{record.expEndTime,jdbcType=TIMESTAMP},
+      submit_time = #{record.submitTime,jdbcType=TIMESTAMP},
+      apply_end_time = #{record.applyEndTime,jdbcType=TIMESTAMP},
+      exp_modify_time = #{record.expModifyTime,jdbcType=TIMESTAMP},
+      exp_begin_time = #{record.expBeginTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hqu.internship.bean.InternshipDetail">
+    update internship_detail
+    <set>
+      <if test="topic != null">
+        topic = #{topic,jdbcType=VARCHAR},
+      </if>
+      <if test="enterpriseId != null">
+        enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      </if>
+      <if test="description != null">
+        description = #{description,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null">
+        status = #{status,jdbcType=TINYINT},
+      </if>
+      <if test="needNum != null">
+        need_num = #{needNum,jdbcType=INTEGER},
+      </if>
+      <if test="expEndTime != null">
+        exp_end_time = #{expEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="submitTime != null">
+        submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="applyEndTime != null">
+        apply_end_time = #{applyEndTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expModifyTime != null">
+        exp_modify_time = #{expModifyTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="expBeginTime != null">
+        exp_begin_time = #{expBeginTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where internship_id = #{internshipId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hqu.internship.bean.InternshipDetail">
+    update internship_detail
+    set topic = #{topic,jdbcType=VARCHAR},
+      enterprise_id = #{enterpriseId,jdbcType=INTEGER},
+      description = #{description,jdbcType=VARCHAR},
+      status = #{status,jdbcType=TINYINT},
+      need_num = #{needNum,jdbcType=INTEGER},
+      exp_end_time = #{expEndTime,jdbcType=TIMESTAMP},
+      submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      apply_end_time = #{applyEndTime,jdbcType=TIMESTAMP},
+      exp_modify_time = #{expModifyTime,jdbcType=TIMESTAMP},
+      exp_begin_time = #{expBeginTime,jdbcType=TIMESTAMP}
+    where internship_id = #{internshipId,jdbcType=INTEGER}
+  </update>
+</mapper>

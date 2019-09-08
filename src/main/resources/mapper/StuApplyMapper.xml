@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hqu.internship.dao.StuApplyMapper">
+  <resultMap id="BaseResultMap" type="com.hqu.internship.bean.StuApply">
+    <id column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="stu_id" jdbcType="VARCHAR" property="stuId" />
+    <result column="exp_id" jdbcType="INTEGER" property="expId" />
+    <result column="apply_status" jdbcType="TINYINT" property="applyStatus" />
+    <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
+  </resultMap>
+  <resultMap id="WithStuResultMap" type="com.hqu.internship.bean.StuApply">
+    <id column="apply_id" jdbcType="INTEGER" property="applyId" />
+    <result column="stu_id" jdbcType="VARCHAR" property="stuId" />
+    <result column="exp_id" jdbcType="INTEGER" property="expId" />
+    <result column="apply_status" jdbcType="TINYINT" property="applyStatus" />
+    <result column="submit_time" jdbcType="TIMESTAMP" property="submitTime" />
+    <association property="student" javaType="com.hqu.internship.bean.Student">
+      <id column="stu_id" property="stuId"/>
+      <result column="name" property="name"/>
+      <result column="enterence_year" property="enterenceYear"/>
+      <result column="major" property="major"/>
+    </association>
+  </resultMap>
+  <sql id="Example_Where_Clause">
+    <where>
+      <foreach collection="oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause">
+    <where>
+      <foreach collection="example.oredCriteria" item="criteria" separator="or">
+        <if test="criteria.valid">
+          <trim prefix="(" prefixOverrides="and" suffix=")">
+            <foreach collection="criteria.criteria" item="criterion">
+              <choose>
+                <when test="criterion.noValue">
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue">
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue">
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue">
+                  and ${criterion.condition}
+                  <foreach close=")" collection="criterion.value" item="listItem" open="(" separator=",">
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List">
+    apply_id, stu_apply.stu_id, exp_id, apply_status, submit_time
+  </sql>
+  <sql id="WithStu_Column_List">
+    apply_id, stu_apply.stu_id, exp_id, apply_status, submit_time, student.stu_id, student.name, enterence_year, major
+  </sql>
+  <select id="selectByExample" parameterType="com.hqu.internship.bean.StuApplyExample" resultMap="BaseResultMap">
+    select
+    <if test="distinct">
+      distinct
+    </if>
+    <include refid="Base_Column_List" />
+    from stu_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null">
+      order by ${orderByClause}
+    </if>
+  </select>
+
+  <select id="selectByExpId" parameterType="java.lang.Integer" resultMap="WithStuResultMap">
+    select
+    <include refid="WithStu_Column_List" />
+    from stu_apply left join student
+    on exp_id = #{expId,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByExpIdStatus" parameterType="java.lang.Integer" resultMap="WithStuResultMap">
+    select
+    <include refid="WithStu_Column_List" />
+    from stu_apply left join student
+    on exp_id = #{expId,jdbcType=INTEGER} and apply_status = #{status,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from stu_apply
+    where apply_id = #{applyId,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from stu_apply
+    where apply_id = #{applyId,jdbcType=INTEGER}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.hqu.internship.bean.StuApplyExample">
+    delete from stu_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+  <insert id="insert" parameterType="com.hqu.internship.bean.StuApply">
+    insert into stu_apply (apply_id, stu_id, exp_id, 
+      apply_status, submit_time)
+    values (#{applyId,jdbcType=INTEGER}, #{stuId,jdbcType=VARCHAR}, #{expId,jdbcType=INTEGER}, 
+      #{applyStatus,jdbcType=TINYINT}, #{submitTime,jdbcType=TIMESTAMP})
+  </insert>
+  <insert id="insertSelective" parameterType="com.hqu.internship.bean.StuApply">
+    insert into stu_apply
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="applyId != null">
+        apply_id,
+      </if>
+      <if test="stuId != null">
+        stu_id,
+      </if>
+      <if test="expId != null">
+        exp_id,
+      </if>
+      <if test="applyStatus != null">
+        apply_status,
+      </if>
+      <if test="submitTime != null">
+        submit_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="applyId != null">
+        #{applyId,jdbcType=INTEGER},
+      </if>
+      <if test="stuId != null">
+        #{stuId,jdbcType=VARCHAR},
+      </if>
+      <if test="expId != null">
+        #{expId,jdbcType=INTEGER},
+      </if>
+      <if test="applyStatus != null">
+        #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="submitTime != null">
+        #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.hqu.internship.bean.StuApplyExample" resultType="java.lang.Long">
+    select count(*) from stu_apply
+    <if test="_parameter != null">
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map">
+    update stu_apply
+    <set>
+      <if test="record.applyId != null">
+        apply_id = #{record.applyId,jdbcType=INTEGER},
+      </if>
+      <if test="record.stuId != null">
+        stu_id = #{record.stuId,jdbcType=VARCHAR},
+      </if>
+      <if test="record.expId != null">
+        exp_id = #{record.expId,jdbcType=INTEGER},
+      </if>
+      <if test="record.applyStatus != null">
+        apply_status = #{record.applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="record.submitTime != null">
+        submit_time = #{record.submitTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map">
+    update stu_apply
+    set apply_id = #{record.applyId,jdbcType=INTEGER},
+      stu_id = #{record.stuId,jdbcType=VARCHAR},
+      exp_id = #{record.expId,jdbcType=INTEGER},
+      apply_status = #{record.applyStatus,jdbcType=TINYINT},
+      submit_time = #{record.submitTime,jdbcType=TIMESTAMP}
+    <if test="_parameter != null">
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.hqu.internship.bean.StuApply">
+    update stu_apply
+    <set>
+      <if test="stuId != null">
+        stu_id = #{stuId,jdbcType=VARCHAR},
+      </if>
+      <if test="expId != null">
+        exp_id = #{expId,jdbcType=INTEGER},
+      </if>
+      <if test="applyStatus != null">
+        apply_status = #{applyStatus,jdbcType=TINYINT},
+      </if>
+      <if test="submitTime != null">
+        submit_time = #{submitTime,jdbcType=TIMESTAMP},
+      </if>
+    </set>
+    where apply_id = #{applyId,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.hqu.internship.bean.StuApply">
+    update stu_apply
+    set stu_id = #{stuId,jdbcType=VARCHAR},
+      exp_id = #{expId,jdbcType=INTEGER},
+      apply_status = #{applyStatus,jdbcType=TINYINT},
+      submit_time = #{submitTime,jdbcType=TIMESTAMP}
+    where apply_id = #{applyId,jdbcType=INTEGER}
+  </update>
+</mapper>
